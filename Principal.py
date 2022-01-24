@@ -3,9 +3,6 @@ from ARCargo import Cargo
 from ARDepartamento import Departamento
 from AREmpleados import Empleado
 
-#def gotoxy(x,y):
-#    print("%c[%d;%df"%(0x1B,y,x),end="")
-
 def Consultar_Datos_AR(cod,indicador):
     res = ""
     if indicador == 1: 
@@ -68,7 +65,7 @@ menupr = Menu()
 lista = ["1) Cargo","2) Departamento","3) Empleados","4) Salir"]
 lista2 = ["1) Ingreso","2) Consulta","3) Regresar al menú principal"]
 dc = ('a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z','á','é','í','ó','ú',' ')
-dn = ('0','1','2','3','4','5','6','7','8','9','0')
+dn = ('0','1','2','3','4','5','6','7','8','9','0','.')
 opcion=""
 
 while opcion != "4":
@@ -171,21 +168,36 @@ while opcion != "4":
                         cb = False
                 print(Consultar_Datos_AR(int(departamento), 2))
                 sueldo = ""
+                ct=0
                 while sueldo == "":
                     sueldo = input("Sueldo        : ")
-                    for per in str(sueldo):
-                        if per not in dn and "." not in sueldo:
-                            mesage_error(-1)
-                            sueldo=""
-                            break
-                        else:
+                    if sueldo != "":
+                        for per in sueldo:
+                            if per not in dn:
+                                mesage_error(-1)
+                                sueldo = ""
+                        if sueldo !="":        
                             try:
                                 float(sueldo)
                             except:
                                 mesage_error(-1)
                                 sueldo = ""
-                sueldo = sueldo[0:sueldo.find(".")+3]
-                arcar = Empleado(nombre.title(), cedula, int(cargo), int(departamento), float(sueldo))
+                                break
+                    else:
+                        mesage_error(-1)
+                        sueldo = ""
+                if '.' not in sueldo:
+                    sueldo = sueldo + ".00"
+                else:
+                    for i in sueldo:
+                        if i == '.':
+                            cb = False
+                        if cb == False:
+                            ct+= 1
+                    sueldo = sueldo+"0"
+                    if ct > 2:
+                        sueldo = sueldo[0:sueldo.find(".")+3]
+                arcar = Empleado(nombre.title(), cedula, int(cargo), int(departamento), sueldo)
                 Empleado.Empleados.append(arcar.registro())
                 input("Datos ingresados satisfactoriamente, presione ENTER para continuar...")
             elif opc1 == "2":
