@@ -3,8 +3,8 @@ from ARCargo import Cargo
 from ARDepartamento import Departamento
 from AREmpleados import Empleado
 
-def gotoxy(x,y):
-    print("%c[%d;%df"%(0x1B,y,x),end="")
+#def gotoxy(x,y):
+#    print("%c[%d;%df"%(0x1B,y,x),end="")
 
 def Consultar_Datos_AR(cod,indicador):
     res = ""
@@ -62,13 +62,13 @@ def mesage_error(ind):
     elif ind == 0:
         print("La entrada es incorrecta, cumpla con los términos.")
     elif ind == -1:
-        print("Ingrese correctamente el valor con sus decimales [0000.00].")
+        print("Ingrese correctamente el valor con sus decimales [0000.00].")     
 
 menupr = Menu()
 lista = ["1) Cargo","2) Departamento","3) Empleados","4) Salir"]
 lista2 = ["1) Ingreso","2) Consulta","3) Regresar al menú principal"]
 dc = ('a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z','á','é','í','ó','ú',' ')
-dn = ('0','1','2','3','4','5','6','7','8','9','0','.')
+dn = ('0','1','2','3','4','5','6','7','8','9','0')
 opcion=""
 
 while opcion != "4":
@@ -87,7 +87,7 @@ while opcion != "4":
                     cargnom = input("Cargo: ")
                     for per in str(cargnom):
                         if per.lower() not in dc:
-                            cargnom=""
+                            cargnom = ""
                             break
                     cargnom = validar(cargnom,1)           
                 carg = Cargo(cargnom.title())
@@ -113,7 +113,7 @@ while opcion != "4":
                     deparnom = input("Departamento: ")
                     for per in str(deparnom):
                         if per.lower() not in dc:
-                            cargnom=""
+                            deparnom=""
                             break
                     deparnom = validar(deparnom,5)
                 depar = Departamento(deparnom.title())
@@ -170,18 +170,20 @@ while opcion != "4":
                         mesage_error(0)
                         cb = False
                 print(Consultar_Datos_AR(int(departamento), 2))
-                sueldo = 0.0
-                while sueldo == 0.0:
-                    sueldo = float(input("Sueldo        : "))
-                    if "." in sueldo:
-                    try:
-                        #str(sueldo)
-                        
-                    except:
-                        mesage_error(-1)
-                        sueldo = 0.0
-                   # else:
-                   #     mesage_error(-1)
+                sueldo = ""
+                while sueldo == "":
+                    sueldo = input("Sueldo        : ")
+                    for per in str(sueldo):
+                        if per not in dn and "." not in sueldo:
+                            mesage_error(-1)
+                            sueldo=""
+                            break
+                        else:
+                            try:
+                                float(sueldo)
+                            except:
+                                mesage_error(-1)
+                                sueldo = ""
                 sueldo = sueldo[0:sueldo.find(".")+3]
                 arcar = Empleado(nombre.title(), cedula, int(cargo), int(departamento), float(sueldo))
                 Empleado.Empleados.append(arcar.registro())
